@@ -1,0 +1,27 @@
+# Utiliser une image Python préexistante
+FROM python:3.9-slim
+
+# Installer les dépendances système nécessaires
+RUN apt-get update && apt-get install -y \
+    gcc \
+    libstdc++6 \
+    && rm -rf /var/lib/apt/lists/*
+
+# Installer les dépendances Python, y compris PyTorch
+# Choisir la version CPU pour PyTorch (compatible avec la plupart des environnements Docker)
+RUN pip install --no-cache-dir \
+    fastapi \
+    uvicorn \
+    transformers \
+    sentencepiece \
+    torch
+
+# Copier les fichiers du service
+COPY generation_service.py /app/
+WORKDIR /app
+
+# Exposer le port
+EXPOSE 8002
+
+# Commande de démarrage
+CMD ["uvicorn", "generation_service:app", "--host", "0.0.0.0", "--port", "8002"]

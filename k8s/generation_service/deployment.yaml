@@ -1,0 +1,12 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: generation-service
+spec:
+  containers:
+    - image: localhost:5000/cloud-generation_service:latest
+      name: generation-service
+      ports:
+        - containerPort: 8002
+          protocol: TCP
+  restartPolicy: Always

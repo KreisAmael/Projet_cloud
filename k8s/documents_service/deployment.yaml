@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: documents-service
+    spec:
+      containers:
+        - image: localhost:5000/cloud-documents_service:latest
+          name: documents-service
+          ports:
+            - containerPort: 8000
+              protocol: TCP
+          volumeMounts:
+            - mountPath: /app/documents.json
+              name: documents-service-cm0
+              subPath: documents.json
+          env:
+            - name: DOCUMENTS_FILE
+              value: "/app/documents.json"
+            - name: LLM_MODEL_NAME
+              value: "sentence-transformers/all-MiniLM-L6-v2"
+      restartPolicy: Always
+      volumes:
+        - configMap:
+            items:
+              - key: documents.json
+                path: documents.json
+            name: documents-service-cm0
+          name: documents-service-cm0

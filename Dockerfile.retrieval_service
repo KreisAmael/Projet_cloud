@@ -1,0 +1,16 @@
+FROM python:3.9-slim
+
+# Installer les dépendances
+RUN apt-get update && apt-get install -y gcc && \
+    pip install --no-cache-dir fastapi uvicorn sentence-transformers scikit-learn python-dotenv
+
+# Copier les fichiers
+COPY retrieval_service.py /app/
+COPY .env /app/
+WORKDIR /app
+
+# Exposer le port
+EXPOSE 8001
+
+# Commande de démarrage
+CMD ["uvicorn", "retrieval_service:app", "--host", "0.0.0.0", "--port", "8001"]

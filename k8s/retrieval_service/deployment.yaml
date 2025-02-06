@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: retrieval-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: retrieval-service
+  containers:
+    - image: localhost:5000/cloud-retrieval_service:latest
+      name: retrieval-service
+      ports:
+        - containerPort: 8001
+          protocol: TCP
+      volumeMounts:
+        - mountPath: /app/documents.json
+          name: retrieval-service-cm0
+          subPath: documents.json
+  restartPolicy: Always
+  volumes:
+    - configMap:
+        items:
+          - key: documents.json
+            path: documents.json
+        name: retrieval-service-cm0
+      name: retrieval-service-cm0

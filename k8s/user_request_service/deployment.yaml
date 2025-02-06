@@ -1,0 +1,12 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-request-service
+spec:
+  containers:
+    - image: localhost:5000/cloud-user_request_service:latest
+      name: user-request-service
+      ports:
+        - containerPort: 8003
+          protocol: TCP
+  restartPolicy: Always

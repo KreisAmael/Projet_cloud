@@ -1,0 +1,50 @@
+services:
+  documents_service:
+    build:
+      context: .
+      dockerfile: Dockerfile.documents_service
+    ports:
+      - "8000:8000"
+    networks:
+      - microservices_net
+    volumes:
+      - ./documents.json:/app/documents.json  # Persistance des documents
+  
+  retrieval_service:
+    build:
+      context: .
+      dockerfile: Dockerfile.retrieval_service
+    ports:
+      - "8001:8001"
+    networks:
+      - microservices_net
+    #depends_on:
+    #  - documents_service
+    volumes:
+      - ./documents.json:/app/documents.json
+
+  generation_service:
+    build:
+      context: .
+      dockerfile: Dockerfile.generation_service
+    ports:
+      - "8002:8002"
+    networks:
+      - microservices_net
+
+  user_request_service:
+    build:
+      context: .
+      dockerfile: Dockerfile.user_request_service
+    ports:
+      - "8003:8003"
+    networks:
+      - microservices_net
+    depends_on:
+      - documents_service
+      - retrieval_service
+      - generation_service
+
+networks:
+  microservices_net:
+    driver: bridge

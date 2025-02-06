@@ -1,0 +1,16 @@
+# Image préexistante avec Python minimal
+FROM python:3.9-slim
+
+# Installer uniquement les bibliothèques nécessaires
+RUN pip install --no-cache-dir fastapi uvicorn sentence-transformers python-dotenv
+
+# Copier le fichier du service
+COPY documents_service.py /app/
+COPY .env /app/
+WORKDIR /app
+
+# Exposer le port 8000
+EXPOSE 8000
+
+# Commande de démarrage
+CMD ["uvicorn", "documents_service:app", "--host", "0.0.0.0", "--port", "8000"]
